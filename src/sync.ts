@@ -13,7 +13,7 @@ async function main() {
       name: 'The Automator',
       description: 'Your ultimate ai assistant',
       url: 'https://example.com/a2a',
-      capabilities: ['defi', 'web_search', 'file_search', 'math']
+      capabilities: ['defi', 'web_search', 'file_search', 'music']
     },
   }
 
