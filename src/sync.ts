@@ -1,5 +1,5 @@
-import { sync, search } from '@0xintuition/sdk'
-import { account, config } from './setup'
+import { sync } from '@0xintuition/sdk'
+import { config } from './setup'
 
 async function main() {
 
@@ -13,7 +13,7 @@ async function main() {
       name: 'The Automator',
       description: 'Your ultimate ai assistant',
       url: 'https://example.com/a2a',
-      capabilities: ['defi', 'web_search', 'file_search']
+      capabilities: ['defi', 'web_search', 'file_search', 'math']
     },
   }
 
@@ -22,19 +22,7 @@ async function main() {
 
   console.log('Syncing data...')
   await sync(config, data)
-
-
-  // the search function takes an array of required key/value pairs
-  // and an array of trusted account addresses 
-
-  console.log('Searching...')
-  const result = await search([
-    { type: 'agent' },
-    // { capabilities: 'defi' },
-    // { capabilities: 'web_search' },
-  ], [account.address])
-
-  console.dir(result, { depth: 10 })
+  console.log('Done.')
 
 }
 
