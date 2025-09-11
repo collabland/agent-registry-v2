@@ -12,9 +12,9 @@
   "license": "ISC",
   "packageManager": "pnpm@10.12.4",
   "dependencies": {
-    "@0xintuition/graphql": "1.0.0-alpha.1",
-    "@0xintuition/protocol": "1.0.0-alpha.3",
-    "@0xintuition/sdk": "1.0.0-alpha.3",
+    "@0xintuition/graphql": "2.0.0-alpha.0",
+    "@0xintuition/protocol": "2.0.0-alpha.0",
+    "@0xintuition/sdk": "2.0.0-alpha.0",
     "dotenv": "^17.2.1",
     "tsx": "^4.20.3",
     "typescript": "^5.9.2",

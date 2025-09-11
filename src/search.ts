@@ -9,7 +9,7 @@ async function main() {
   console.log('Searching...')
   const result = await search([
     { type: 'agent' },
-    { capabilities: 'defi' },
+    // { capabilities: 'defi' },
     { capabilities: 'web_search' },
   ], [account.address])
 

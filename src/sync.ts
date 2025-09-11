@@ -8,12 +8,15 @@ async function main() {
   // key / value pairs currently supported only one level deep (no nested objects)
 
   const data = {
-    'did:example:123': {
+    'did:example:456': {
       type: 'agent',
-      name: 'The Automator',
+      name: 'Claude',
       description: 'Your ultimate ai assistant',
-      url: 'https://example.com/a2a',
-      capabilities: ['defi', 'web_search', 'file_search', 'music']
+      url: 'https://agent.example.com/a2a',
+      capabilities: [
+        'web_search',
+        // 'defi',
+      ]
     },
   }
 
