@@ -7,10 +7,17 @@ async function main() {
   // and an array of trusted account addresses 
 
   console.log('Searching...')
+  // const result = await search([
+  //   { type: 'agent' },
+  //   // { capabilities: 'defi' },
+  //   { capabilities: 'web_search' },
+  // ], [account.address])
+
   const result = await search([
-    { type: 'agent' },
-    // { capabilities: 'defi' },
-    { capabilities: 'web_search' },
+    // { type: 'agent' },
+    // { capabilities: 'test' },
+    {"is a member of": "discord:904119310702772254"},
+    //{ capabilities: 'web_search' },
   ], [account.address])
 
   console.dir(result, { depth: 10 })
