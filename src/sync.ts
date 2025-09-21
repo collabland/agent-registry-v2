@@ -8,15 +8,10 @@ async function main() {
   // key / value pairs currently supported only one level deep (no nested objects)
 
   const data = {
-    'did:example:456': {
-      type: 'agent',
-      name: 'Claude',
-      description: 'Your ultimate ai assistant',
-      url: 'https://agent.example.com/a2a',
-      capabilities: [
-        'web_search',
-        // 'defi',
-      ]
+    'discord:904119310702772254': {
+      name: 'The Collab.Land Discord',
+      description: 'Collab.Land\'s Official Discord Server',
+      url: 'https://discord.gg/collabland'
     },
   }
 
