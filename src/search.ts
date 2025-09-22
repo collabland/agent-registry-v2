@@ -10,7 +10,7 @@ async function main() {
   const result = await search([
     { type: 'agent' },
     // { capabilities: 'defi' },
-    { capabilities: 'web_search' },
+    { capabilities: 'quiz' },
   ], [account.address])
 
   console.dir(result, { depth: 10 })

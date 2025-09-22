@@ -7,19 +7,31 @@ async function main() {
   // did:example:123 - can be any identifier, for example - ethereum address
   // key / value pairs currently supported only one level deep (no nested objects)
 
+  // const data = {
+  //   'did:example:456': {
+  //     type: 'agent',
+  //     name: 'Claude',
+  //     description: 'Your ultimate ai assistant',
+  //     url: 'https://agent.example.com/a2a',
+  //     capabilities: [
+  //       'web_search',
+  //       // 'defi',
+  //     ]
+  //   },
+  // }
   const data = {
-    'did:example:456': {
+    'discord:1405656846097842257': {
       type: 'agent',
-      name: 'Claude',
-      description: 'Your ultimate ai assistant',
+      name: 'Quiz Agent',
+      address: '0xDa04681DF85A8231b967E6cDeFC332fcabeEB0ee',
+      description: 'Provides quizzes to engage community members',
       url: 'https://agent.example.com/a2a',
       capabilities: [
-        'web_search',
+        'quiz',
         // 'defi',
       ]
     },
   }
-
   // the sync function will check for existing data, and will try to create
   // missing atoms / triples in two transactions
 
