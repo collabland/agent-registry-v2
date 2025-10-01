@@ -8,16 +8,10 @@ async function main() {
   // key / value pairs currently supported only one level deep (no nested objects)
 
   const data = {
-    'did:example:456': {
-      type: 'agent',
-      name: 'Claude',
-      description: 'Your ultimate ai assistant',
-      url: 'https://agent.example.com/a2a',
-      capabilities: [
-        'web_search',
-        // 'defi',
-      ]
-    },
+    'gaianet.ai': {
+      "https://schema.org/keywords": "ipfs://bafkreignirseakgl3f4a6ux7oslc67md5tvzcskifkirdz5u7xfqrddeli"
+    }
+  }
   }
 
   // the sync function will check for existing data, and will try to create
