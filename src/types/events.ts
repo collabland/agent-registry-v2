@@ -21,7 +21,7 @@ export function isQuizCompletedEvent(event: any): event is QuizCompletedEvent {
     typeof event === "object" &&
     event.type === "quiz_completed" &&
     typeof event.userAddress === "string" &&
-    typeof event.guildId === "string" &&
+    typeof event.communityId === "string" &&
     event.metadata &&
     typeof event.metadata.quizId === "string" &&
     typeof event.metadata.completedAt === "string" &&
