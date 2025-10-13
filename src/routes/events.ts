@@ -80,7 +80,7 @@ async function handleQuizCompletedEvent(event: QuizCompletedEvent) {
   // Transform event data into Intuition protocol format
   // Use user address as the DID
   const did = `did:eth:${event.userAddress.toLowerCase()}`;
-  
+
   const syncData = {
     [did]: {
       type: "quiz_completion",
