@@ -1,2 +1,2 @@
-web: node --loader tsx src/server.ts
+web: node --import tsx src/server.ts
 

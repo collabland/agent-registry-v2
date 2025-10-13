@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node --loader tsx src/server.ts",
+    "start": "node --import tsx src/server.ts",
     "dev": "tsx watch src/server.ts",
     "sync": "tsx src/sync.ts",
     "search": "tsx src/search.ts",
