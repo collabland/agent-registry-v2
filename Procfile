@@ -1,0 +1,2 @@
+web: node --loader tsx src/server.ts
+

@@ -5,6 +5,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "node --loader tsx src/server.ts",
+    "dev": "tsx watch src/server.ts",
+    "sync": "tsx src/sync.ts",
+    "search": "tsx src/search.ts",
+    "deploy:qa": "git push qa develop:main",
+    "deploy:prod": "git push production main",
+    "logs:qa": "heroku logs --tail --remote qa",
+    "logs:prod": "heroku logs --tail --remote production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,12 +23,16 @@
     "@0xintuition/graphql": "2.0.0-alpha.0",
     "@0xintuition/protocol": "2.0.0-alpha.0",
     "@0xintuition/sdk": "2.0.0-alpha.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
+    "express": "^4.18.2",
     "tsx": "^4.20.3",
     "typescript": "^5.9.2",
     "viem": "2.31.4"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
     "@types/node": "^24.2.0"
   }
 }
