@@ -3,7 +3,7 @@
 export interface QuizCompletedEvent {
   type: "quiz_completed";
   userAddress: string;
-  guildId: string;
+  communityId: string;
   metadata: {
     quizId: string;
     completedAt: string;

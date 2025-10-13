@@ -72,7 +72,7 @@ router.post(
 async function handleQuizCompletedEvent(event: QuizCompletedEvent) {
   console.log("Processing quiz_completed event:");
   console.log("  User Address:", event.userAddress);
-  console.log("  Guild ID:", event.guildId);
+  console.log("  Community ID:", event.communityId);
   console.log("  Quiz ID:", event.metadata.quizId);
   console.log("  Completed At:", event.metadata.completedAt);
   console.log("  Version:", event.version);
@@ -85,7 +85,7 @@ async function handleQuizCompletedEvent(event: QuizCompletedEvent) {
     [did]: {
       type: "quiz_completion",
       user_address: event.userAddress,
-      guild_id: event.guildId,
+      community_id: event.guildId,
       quiz_id: event.metadata.quizId,
       completed_at: event.metadata.completedAt,
       event_version: event.version,
