@@ -1,5 +1,7 @@
+import { sync } from "@0xintuition/sdk";
 import { Request, Response, Router } from "express";
 import { validateApiKey } from "../middleware/auth.js";
+import { config } from "../setup.js";
 import {
   IntuitionEvent,
   QuizCompletedEvent,
@@ -75,12 +77,32 @@ async function handleQuizCompletedEvent(event: QuizCompletedEvent) {
   console.log("  Completed At:", event.metadata.completedAt);
   console.log("  Version:", event.version);
 
-  // TODO: Add your business logic here
-  // For example:
-  // - Store in database
-  // - Send to blockchain
-  // - Trigger notifications
-  // - Update user stats
+  // Transform event data into Intuition protocol format
+  // Use user address as the DID
+  const did = `did:eth:${event.userAddress.toLowerCase()}`;
+  
+  const syncData = {
+    [did]: {
+      type: "quiz_completion",
+      user_address: event.userAddress,
+      guild_id: event.guildId,
+      quiz_id: event.metadata.quizId,
+      completed_at: event.metadata.completedAt,
+      event_version: event.version,
+    },
+  };
+
+  console.log("Syncing to blockchain...");
+  console.log("  DID:", did);
+  console.log("  Data:", JSON.stringify(syncData, null, 2));
+
+  try {
+    await sync(config, syncData);
+    console.log("✅ Successfully synced to blockchain");
+  } catch (error: any) {
+    console.error("❌ Failed to sync to blockchain:", error.message);
+    throw error; // Re-throw to be caught by the main handler
+  }
 }
 
 export default router;
