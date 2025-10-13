@@ -85,7 +85,7 @@ async function handleQuizCompletedEvent(event: QuizCompletedEvent) {
     [did]: {
       type: "quiz_completion",
       user_address: event.userAddress,
-      community_id: event.guildId,
+      community_id: event.communityId,
       quiz_id: event.metadata.quizId,
       completed_at: event.metadata.completedAt,
       event_version: event.version,
