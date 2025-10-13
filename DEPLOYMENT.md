@@ -53,71 +53,44 @@ origin          <your-github-repo> (push)
 
 ## Environment Variables Setup
 
-### QA Environment
-
 ```bash
-# Set QA environment variables
-heroku config:set SIGNER=0x... --remote qa
-heroku config:set API_KEY=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))") --remote qa
-heroku config:set NODE_ENV=staging --remote qa
+# Generate a secure API key
+API_KEY=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
+echo "Generated API_KEY: $API_KEY"
 
-# Verify QA config
-heroku config --remote qa
+# Set environment variables
+heroku config:set SIGNER=0xyour_private_key_here
+heroku config:set API_KEY=$API_KEY
+heroku config:set NODE_ENV=production
+
+# Verify configuration
+heroku config
 ```
 
-### Production Environment
-
-```bash
-# Set Production environment variables (use DIFFERENT keys!)
-heroku config:set SIGNER=0x... --remote production
-heroku config:set API_KEY=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))") --remote production
-heroku config:set NODE_ENV=production --remote production
-
-# Verify Production config
-heroku config --remote production
-```
-
-> ⚠️ **Important:** Use different SIGNER and API_KEY values for QA and Production!
+> ⚠️ **Important:** Use a production-grade private key and keep it secure!
 
 ## Deployment
 
-### Deploy to QA (from develop branch)
+### Deploy to Production
 
 ```bash
-# Switch to develop branch
-git checkout develop
-
-# Commit your changes
-git add .
-git commit -m "Your commit message"
-
-# Deploy to QA
-git push qa develop:main
-
-# View QA logs
-heroku logs --tail --remote qa
-
-# Open QA app
-heroku open --remote qa
-```
-
-### Deploy to Production (from main branch)
-
-```bash
-# Switch to main branch
+# Make sure you're on main branch
 git checkout main
 
-# Merge develop into main (after testing in QA)
+# Merge your changes from develop (after local testing)
 git merge develop
 
-# Deploy to Production
-git push production main
+# Deploy to Heroku
+git push heroku main
 
-# View Production logs
-heroku logs --tail --remote production
+# Or use npm script
+npm run deploy
 
-# Open Production app
-heroku open --remote production
+# View logs
+heroku logs --tail
+
+# Open app in browser
+heroku open
 ```
 
 ## Quick Deployment Scripts
@@ -181,12 +154,15 @@ curl -X POST https://agent-registry-prod.herokuapp.com/v1/intuition/events \
   ...
 ```
 
-## Environment URLs
+## App URL
 
-| Environment | URL |
-|-------------|-----|
-| QA | `https://agent-registry-qa.herokuapp.com` |
-| Production | `https://agent-registry-prod.herokuapp.com` |
+Your production app will be available at:
+- `https://your-app-name.herokuapp.com`
+
+Find your URL with:
+```bash
+heroku info | grep "Web URL"
+```
 
 ## Monitoring & Logs
 
@@ -258,16 +234,14 @@ heroku rollback --remote production
 ### Enable Automatic Deploys
 
 1. Go to Heroku Dashboard
-2. Select your app (QA or Production)
+2. Select your app
 3. Click "Deploy" tab
 4. Connect to GitHub
 5. Enable Automatic Deploys
-6. Choose branch:
-   - QA app → `develop` branch
-   - Production app → `main` branch
+6. Choose branch: `main`
 7. ✅ Enable "Wait for CI to pass before deploy" (recommended)
 
-Now your apps will automatically deploy when you push to GitHub!
+Now your app will automatically deploy when you push to `main` branch on GitHub!
 
 ## Troubleshooting
 
@@ -302,20 +276,20 @@ heroku ps --remote production
 ## Workflow Summary
 
 1. **Development** → Work on `develop` branch
-2. **Testing** → Deploy to QA: `git push qa develop:main`
-3. **Verification** → Test on QA environment
-4. **Release** → Merge to `main`: `git merge develop`
-5. **Deploy** → Deploy to Production: `git push production main`
+2. **Local Testing** → Test locally: `npm run dev`
+3. **Commit** → Commit your changes
+4. **Merge** → Merge `develop` to `main`: `git checkout main && git merge develop`
+5. **Deploy** → Deploy to Production: `npm run deploy`
 6. **Monitor** → Check logs and health endpoints
 
 ## Security Checklist
 
-- [ ] Different SIGNER keys for QA and Production
-- [ ] Different API_KEY for QA and Production
-- [ ] API keys are 32+ characters
+- [ ] Production SIGNER key is secure and backed up
+- [ ] API_KEY is 32+ characters and randomly generated
 - [ ] Never commit .env files
 - [ ] HTTPS enabled (Heroku provides this automatically)
-- [ ] Environment variables set correctly on both apps
+- [ ] Environment variables set correctly on Heroku
+- [ ] Test locally before deploying to production
 
 ## Cost Management
 

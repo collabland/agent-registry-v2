@@ -1,46 +1,25 @@
 #!/bin/bash
 
 # Deployment script for Agent Registry API
-# Usage: ./deploy.sh [qa|prod]
+# Usage: ./deploy.sh
 
 set -e
 
-ENV=$1
+BRANCH="main"
+APP_NAME="Production"
 
-if [ -z "$ENV" ]; then
-  echo "❌ Error: Environment not specified"
-  echo "Usage: ./deploy.sh [qa|prod]"
-  exit 1
-fi
-
-case $ENV in
-  qa)
-    REMOTE="qa"
-    BRANCH="develop"
-    APP_NAME="QA"
-    ;;
-  prod)
-    REMOTE="production"
-    BRANCH="main"
-    APP_NAME="Production"
-    ;;
-  *)
-    echo "❌ Error: Invalid environment '$ENV'"
-    echo "Usage: ./deploy.sh [qa|prod]"
-    exit 1
-    ;;
-esac
-
-echo "🚀 Deploying to $APP_NAME environment..."
+echo "🚀 Deploying to $APP_NAME..."
 echo ""
 
 # Check if we're on the correct branch
 CURRENT_BRANCH=$(git branch --show-current)
 if [ "$CURRENT_BRANCH" != "$BRANCH" ]; then
   echo "⚠️  Warning: You're on branch '$CURRENT_BRANCH' but deploying from '$BRANCH'"
-  read -p "Continue? (y/n) " -n 1 -r
+  read -p "Switch to $BRANCH and continue? (y/n) " -n 1 -r
   echo
-  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    git checkout $BRANCH
+  else
     echo "❌ Deployment cancelled"
     exit 1
   fi
@@ -62,25 +41,21 @@ fi
 # Deploy
 echo ""
 echo "📦 Deploying $BRANCH to $APP_NAME..."
-if [ "$ENV" == "qa" ]; then
-  git push $REMOTE $BRANCH:main
-else
-  git push $REMOTE $BRANCH
-fi
+git push heroku $BRANCH
 
 echo ""
 echo "✅ Deployment to $APP_NAME complete!"
 echo ""
 echo "🔍 Checking deployment status..."
-heroku ps --remote $REMOTE
+heroku ps
 
 echo ""
 echo "🌐 App URL:"
-heroku info --remote $REMOTE | grep "Web URL"
+heroku info | grep "Web URL"
 
 echo ""
-echo "📋 View logs with: npm run logs:$ENV"
-echo "   or: heroku logs --tail --remote $REMOTE"
+echo "📋 View logs with: npm run logs"
+echo "   or: heroku logs --tail"
 echo ""
 echo "🎉 Done!"
 

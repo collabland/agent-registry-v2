@@ -9,10 +9,8 @@
     "dev": "tsx watch src/server.ts",
     "sync": "tsx src/sync.ts",
     "search": "tsx src/search.ts",
-    "deploy:qa": "git push qa develop:main",
-    "deploy:prod": "git push production main",
-    "logs:qa": "heroku logs --tail --remote qa",
-    "logs:prod": "heroku logs --tail --remote production",
+    "deploy": "git push heroku main",
+    "logs": "heroku logs --tail",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

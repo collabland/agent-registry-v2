@@ -139,52 +139,47 @@ x-api-key: your_api_key_here
 
 ## Heroku Deployment
 
-### Two Environment Setup (QA + Production)
+Test locally, then deploy to production.
 
-We maintain two separate Heroku environments:
+See **[DEPLOYMENT_SIMPLE.md](./DEPLOYMENT_SIMPLE.md)** for step-by-step guide.
 
-- **QA** (develop branch) - For testing
-- **Production** (main branch) - For live users
-
-See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for complete setup instructions.
-
-### Quick Deploy
+### Quick Start
 
 ```bash
-# Deploy to QA
-npm run deploy:qa
+# Install Heroku CLI (Mac)
+brew tap heroku/brew && brew install heroku
 
-# Deploy to Production
-npm run deploy:prod
+# Login
+heroku login
 
-# Or use the script
-./deploy.sh qa
-./deploy.sh prod
-```
+# Create app
+heroku create your-app-name
 
-### First Time Setup
-
-```bash
-# Create both apps
-heroku create agent-registry-qa --remote qa
-heroku create agent-registry-prod --remote production
-
-# Set environment variables for QA
-heroku config:set SIGNER=0x... --remote qa
-heroku config:set API_KEY=... --remote qa
-
-# Set environment variables for Production
-heroku config:set SIGNER=0x... --remote production
-heroku config:set API_KEY=... --remote production
+# Set environment variables
+heroku config:set SIGNER=0x...
+heroku config:set API_KEY=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
 
 # Deploy
-git push qa develop:main     # Deploy develop to QA
-git push production main      # Deploy main to Production
+git checkout main
+git push heroku main
+```
+
+### Quick Commands
+
+```bash
+# Deploy
+npm run deploy
+
+# View logs
+npm run logs
+
+# Open app
+heroku open
 ```
 
 ## Documentation
 
-- **[Deployment Guide](./DEPLOYMENT.md)** - Heroku deployment with QA and Production environments
+- **[Simple Deployment](./DEPLOYMENT_SIMPLE.md)** - Quick Heroku deployment guide (recommended)
 - **[API Documentation](./API_DOCUMENTATION.md)** - Complete API reference with examples
 - **[Security Guide](./SECURITY.md)** - API key setup and security best practices
 - **[Project Understanding](./PROJECT_UNDERSTANDING.md)** - Architecture and implementation details
