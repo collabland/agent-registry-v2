@@ -10,13 +10,58 @@ Create a `.env` file in the root directory of the project with the following var
 # IMPORTANT: Never commit your actual .env file to git!
 SIGNER=0xyour_private_key_here
 
-# API Key for webhook authentication
-# Generate a secure random string (at least 32 characters)
+# API Key Configuration (choose one method):
+# Method 1: Single API key (backward compatible)
 API_KEY=your_secure_api_key_here
+
+# Method 2: Multiple numbered API keys (for different servers)
+API_KEY_1=server1_api_key_here
+API_KEY_2=server2_api_key_here
+API_KEY_3=server3_api_key_here
+
+# Method 3: Comma-separated API keys
+API_KEYS=key1,key2,key3
 
 # Optional: Server port (defaults to 3000)
 PORT=3000
 ```
+
+## Multiple API Keys
+
+The API supports multiple API keys to allow different servers/services to access your webhook. This is useful when you have:
+
+- Multiple development environments
+- Different services that need access
+- Third-party integrations
+- Team members with different access levels
+
+### Configuration Methods
+
+**Method 1: Single API Key (Backward Compatible)**
+```bash
+API_KEY=your_secure_api_key_here
+```
+
+**Method 2: Numbered API Keys**
+```bash
+API_KEY_1=server1_api_key_here
+API_KEY_2=server2_api_key_here
+API_KEY_3=server3_api_key_here
+```
+
+**Method 3: Comma-Separated Keys**
+```bash
+API_KEYS=key1,key2,key3
+```
+
+You can combine these methods - the system will accept any of the configured keys.
+
+### Example Use Cases
+
+- **Development Team**: Each developer gets their own API key
+- **Multiple Services**: Different microservices use different keys
+- **Third-party Integration**: Give each partner a unique key
+- **Environment Separation**: Different keys for staging, production, etc.
 
 ## How to Get Your Private Key
 

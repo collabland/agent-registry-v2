@@ -25,12 +25,25 @@ Create a `.env` file in the root directory:
 # Required: Private key for blockchain transactions
 SIGNER=0xyour_private_key_here
 
-# Required: API key for webhook authentication
+# API Key Configuration (choose one method):
+# Method 1: Single API key (backward compatible)
 API_KEY=your_secure_api_key_here
+
+# Method 2: Multiple numbered API keys
+API_KEY_1=server1_api_key_here
+API_KEY_2=server2_api_key_here
+API_KEY_3=server3_api_key_here
+
+# Method 3: Comma-separated API keys
+API_KEYS=key1,key2,key3
 
 # Optional: Server port (defaults to 3000)
 PORT=3000
 ```
+
+### Multiple API Keys
+
+The API supports multiple API keys to allow different servers/services to access your webhook. You can configure them using any of the three methods above, or combine them. The system will accept any of the configured keys.
 
 Generate a secure API key:
 
