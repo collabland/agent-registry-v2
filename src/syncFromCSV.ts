@@ -1,6 +1,8 @@
+import { sync } from "@0xintuition/sdk";
 import { createReadStream } from "fs";
 import { join } from "path";
 import { createInterface } from "readline";
+import { config } from "./setup";
 
 // Simple CSV parser that handles quoted fields
 function parseCSVLine(line: string): string[] {
@@ -124,7 +126,7 @@ async function syncFromCSV() {
 
     // Sync this individual row
     console.log(`Syncing individual row ${rowCount}...`);
-    // await sync(config, individualData);
+    await sync(config, individualData);
     console.log(`Row ${rowCount} sync completed.`);
 
     // Log progress every 1000 rows
