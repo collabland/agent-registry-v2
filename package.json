@@ -8,6 +8,7 @@
     "start": "node --import tsx src/server.ts",
     "dev": "tsx watch src/server.ts",
     "sync": "tsx src/sync.ts",
+    "sync-csv": "tsx src/syncFromCSV.ts",
     "search": "tsx src/search.ts",
     "deploy": "git push heroku main",
     "logs": "heroku logs --tail",

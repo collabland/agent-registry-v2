@@ -1,0 +1,152 @@
+import { createReadStream } from "fs";
+import { join } from "path";
+import { createInterface } from "readline";
+
+// Simple CSV parser that handles quoted fields
+function parseCSVLine(line: string): string[] {
+  const result: string[] = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === "," && !inQuotes) {
+      result.push(current.trim());
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+
+  result.push(current.trim());
+  return result;
+}
+
+async function syncFromCSV() {
+  const csvPath = join(process.cwd(), "src", "discord-communities.csv");
+  const fileStream = createReadStream(csvPath);
+  const rl = createInterface({
+    input: fileStream,
+    crlfDelay: Infinity,
+  });
+
+  let headers: string[] = [];
+  let rowCount = 0;
+  let skippedRows = 0;
+
+  console.log("Reading CSV file...");
+
+  for await (const line of rl) {
+    if (rowCount === 0) {
+      // Parse headers
+      headers = parseCSVLine(line);
+      console.log("Headers:", headers);
+      rowCount++;
+      continue;
+    }
+
+    // Parse CSV row (handle quoted values and commas within fields)
+    const values = parseCSVLine(line);
+
+    // Pad missing columns with empty strings
+    while (values.length < headers.length) {
+      values.push("");
+    }
+
+    // Truncate if too many columns
+    if (values.length > headers.length) {
+      values.splice(headers.length);
+    }
+
+    // Create row object
+    const row: Record<string, string> = {};
+    headers.forEach((header, index) => {
+      row[header] = values[index];
+    });
+
+    // Skip rows where name is undefined, null, or empty
+    if (
+      !row.name ||
+      row.name.trim() === "" ||
+      row.name === "null" ||
+      row.name === "undefined"
+    ) {
+      skippedRows++;
+      rowCount++;
+      continue;
+    }
+
+    // Create agent data structure from CSV row - only using name, iconURL, splashURL, timestamp
+    const agentId = row.name;
+    const agentData: any = {
+      name: row.name,
+    };
+
+    // Only include fields if they are not null, undefined, or empty
+    if (
+      row.timestamp &&
+      row.timestamp !== "null" &&
+      row.timestamp.trim() !== ""
+    ) {
+      agentData.timestamp = row.timestamp;
+    }
+
+    if (row.iconURL && row.iconURL !== "null" && row.iconURL.trim() !== "") {
+      agentData.iconURL = row.iconURL;
+    }
+
+    if (
+      row.splashURL &&
+      row.splashURL !== "null" &&
+      row.splashURL.trim() !== ""
+    ) {
+      agentData.splashURL = row.splashURL;
+    }
+
+    // Create individual data object for this row
+    const individualData = {
+      [agentId]: agentData,
+    };
+
+    rowCount++;
+
+    // Show first agent ID as example
+    if (rowCount === 2) {
+      console.log(`First agent ID: "${agentId}"`);
+    }
+
+    // Print the data for this individual row
+    console.log(`\n=== Syncing row ${rowCount} ===`);
+    console.log(JSON.stringify(individualData, null, 2));
+
+    // Sync this individual row
+    console.log(`Syncing individual row ${rowCount}...`);
+    // await sync(config, individualData);
+    console.log(`Row ${rowCount} sync completed.`);
+
+    // Log progress every 1000 rows
+    if (rowCount % 1000 === 0) {
+      console.log(`Processed ${rowCount} rows...`);
+    }
+
+    // For testing: break after 4 rows processed
+    if (rowCount >= 4) {
+      console.log("Breaking after 4 rows for testing...");
+      break;
+    }
+  }
+
+  console.log(`Total rows processed: ${rowCount - 1}`);
+  console.log(`Rows skipped (missing names): ${skippedRows}`);
+  console.log("All individual row syncs completed.");
+}
+
+// Run the function if this file is executed directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  syncFromCSV().catch((e) => console.error(e));
+}
+
+export { syncFromCSV };
