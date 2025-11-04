@@ -50,6 +50,11 @@ async function syncFromCSV() {
       continue;
     }
 
+    // if (rowCount < 1005) {
+    //   rowCount++;
+    //   continue;
+    // }
+
     // Parse CSV row (handle quoted values and commas within fields)
     const values = parseCSVLine(line);
 
@@ -85,6 +90,9 @@ async function syncFromCSV() {
     const agentId = row.name;
     const agentData: any = {
       name: row.name,
+      "has-tag": "Collab.Land Community",
+      "https://schema.org/keywords":
+        "https://gateway.pinata.cloud/ipfs/bafkreidv44tougnbgui7pbvxk5qjywefhrs3diiv33a7d5l5pokjjbu5ea",
     };
 
     // Only include fields if they are not null, undefined, or empty
@@ -130,12 +138,12 @@ async function syncFromCSV() {
     console.log(`Row ${rowCount} sync completed.`);
 
     // Log progress every 1000 rows
-    if (rowCount % 1000 === 0) {
+    if (rowCount % 50 === 0) {
       console.log(`Processed ${rowCount} rows...`);
     }
 
     // For testing: break after 4 rows processed
-    if (rowCount >= 4) {
+    if (rowCount > 1000) {
       console.log("Breaking after 4 rows for testing...");
       break;
     }
