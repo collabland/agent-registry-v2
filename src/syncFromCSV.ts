@@ -4,9 +4,13 @@ import { join } from "path";
 import { createInterface } from "readline";
 import { config } from "./setup";
 
+const rowsToSkip = 342; // skip rows in case already synced and script is run again
+const maxRecordsToSync = 1000; // stop syncing after this many records
+
 // Simple CSV parser that handles quoted fields
 function parseCSVLine(line: string): string[] {
   const result: string[] = [];
+
   let current = "";
   let inQuotes = false;
 
@@ -50,10 +54,10 @@ async function syncFromCSV() {
       continue;
     }
 
-    // if (rowCount < 1005) {
-    //   rowCount++;
-    //   continue;
-    // }
+    if (rowCount < rowsToSkip) {
+      rowCount++;
+      continue;
+    }
 
     // Parse CSV row (handle quoted values and commas within fields)
     const values = parseCSVLine(line);
@@ -143,7 +147,7 @@ async function syncFromCSV() {
     }
 
     // For testing: break after 4 rows processed
-    if (rowCount > 1000) {
+    if (rowCount > maxRecordsToSync) {
       console.log("Breaking after 4 rows for testing...");
       break;
     }
