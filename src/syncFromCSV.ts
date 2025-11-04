@@ -92,7 +92,7 @@ async function syncFromCSV() {
       name: row.name,
       "has-tag": "Collab.Land Community",
       "https://schema.org/keywords":
-        "https://gateway.pinata.cloud/ipfs/bafkreidv44tougnbgui7pbvxk5qjywefhrs3diiv33a7d5l5pokjjbu5ea",
+        "ipfs://bafkreidv44tougnbgui7pbvxk5qjywefhrs3diiv33a7d5l5pokjjbu5ea",
     };
 
     // Only include fields if they are not null, undefined, or empty
