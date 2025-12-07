@@ -32,7 +32,7 @@ function parseCSVLine(line: string): string[] {
 }
 
 async function syncFromCSV() {
-  const csvPath = join(process.cwd(), "src", ".discord-communities.csv");
+  const csvPath = join(process.cwd(), "src", "discord-communities.csv");
   const fileStream = createReadStream(csvPath);
   const rl = createInterface({
     input: fileStream,
