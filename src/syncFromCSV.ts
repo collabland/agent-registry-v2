@@ -4,8 +4,8 @@ import { join } from "path";
 import { createInterface } from "readline";
 import { config } from "./setup";
 
-const rowsToSkip = 342; // skip rows in case already synced and script is run again
-const maxRecordsToSync = 343; // stop syncing after this many records
+const rowsToSkip = 0; // skip rows in case already synced and script is run again
+const maxRecordsToSync = 1; // stop syncing after this many records
 
 // Simple CSV parser that handles quoted fields
 function parseCSVLine(line: string): string[] {
@@ -32,7 +32,7 @@ function parseCSVLine(line: string): string[] {
 }
 
 async function syncFromCSV() {
-  const csvPath = join(process.cwd(), "src", ".discord-communities.csv");
+  const csvPath = join(process.cwd(), "src", "discord-communities.csv");
   const fileStream = createReadStream(csvPath);
   const rl = createInterface({
     input: fileStream,
@@ -74,16 +74,17 @@ async function syncFromCSV() {
 
     // Create row object
     const row: Record<string, string> = {};
+
     headers.forEach((header, index) => {
       row[header] = values[index];
     });
 
     // Skip rows where name is undefined, null, or empty
     if (
-      !row.name ||
-      row.name.trim() === "" ||
-      row.name === "null" ||
-      row.name === "undefined"
+      !row.communityName ||
+      row.communityName.trim() === "" ||
+      row.communityName === "null" ||
+      row.communityName === "undefined"
     ) {
       skippedRows++;
       rowCount++;
@@ -91,10 +92,9 @@ async function syncFromCSV() {
     }
 
     // Create agent data structure from CSV row - only using name, iconURL, splashURL, timestamp
-    const agentId = row.name;
+    const agentId = row.communityName;
     const agentData: any = {
-      name: row.name,
-      "has-tag": "Collab.Land Community",
+      name: row.communityName,
       "https://schema.org/keywords":
         "ipfs://bafkreidv44tougnbgui7pbvxk5qjywefhrs3diiv33a7d5l5pokjjbu5ea",
     };
@@ -105,20 +105,36 @@ async function syncFromCSV() {
       row.timestamp !== "null" &&
       row.timestamp.trim() !== ""
     ) {
-      agentData.timestamp = row.timestamp;
+      // Format timestamp as readable date: "September 4, 2022"
+      const date = new Date(row.timestamp);
+      agentData.timestamp = date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
     }
 
-    if (row.iconURL && row.iconURL !== "null" && row.iconURL.trim() !== "") {
-      agentData.iconURL = row.iconURL;
+    if (row.icon_url && row.icon_url !== "null" && row.icon_url.trim() !== "") {
+      agentData.image = row.icon_url;
     }
 
     if (
-      row.splashURL &&
-      row.splashURL !== "null" &&
-      row.splashURL.trim() !== ""
+      row.description &&
+      row.description !== "null" &&
+      row.description.trim() !== ""
     ) {
-      agentData.splashURL = row.splashURL;
+      agentData.description = row.description;
     }
+
+    if (
+      row.splash_url &&
+      row.splash_url !== "null" &&
+      row.splash_url.trim() !== ""
+    ) {
+      agentData.splashURL = row.splash_url;
+    }
+
+    agentData.url = "https://collab.land/community";
 
     // Create individual data object for this row
     const individualData = {
@@ -137,9 +153,8 @@ async function syncFromCSV() {
     console.log(JSON.stringify(individualData, null, 2));
 
     // Sync this individual row
-    console.log(`Syncing individual row ${rowCount}...`);
-    await sync(config, individualData);
-    console.log(`Row ${rowCount} sync completed.`);
+    const response = await sync(config, individualData);
+    console.log(`Row ${rowCount} sync completed.`, " \n Response:", response);
 
     // Log progress every 1000 rows
     if (rowCount % 50 === 0) {
@@ -148,7 +163,9 @@ async function syncFromCSV() {
 
     // For testing: break after 4 rows processed
     if (rowCount > maxRecordsToSync) {
-      console.log("Breaking after 4 rows for testing...");
+      console.log(
+        "Breaking after " + maxRecordsToSync + " rows for testing..."
+      );
       break;
     }
   }

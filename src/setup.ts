@@ -1,7 +1,11 @@
-import { API_URL_DEV, configureClient } from "@0xintuition/graphql";
 import {
-  // intuitionTestnet,
+  API_URL_DEV,
+  API_URL_PROD,
+  configureClient,
+} from "@0xintuition/graphql";
+import {
   getMultiVaultAddressFromChainId,
+  intuitionMainnet,
 } from "@0xintuition/sdk";
 import dotenv from "dotenv";
 import {
@@ -13,9 +17,11 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 dotenv.config();
 
-// Set Base Sepolia GraphQL endpoint
+// Set GraphQL endpoint based on environment
+const apiUrl =
+  process.env.NODE_ENV === "production" ? API_URL_PROD : API_URL_DEV;
 configureClient({
-  apiUrl: API_URL_DEV,
+  apiUrl,
 });
 
 // This should be the logged in account (Metamask, etc)
@@ -62,19 +68,22 @@ const intuitionTestnet = defineChain({
   },
 });
 
-const walletClient = createWalletClient({
-  chain: intuitionTestnet,
+const chain =
+  process.env.NODE_ENV === "production" ? intuitionMainnet : intuitionTestnet;
+
+export const walletClient = createWalletClient({
+  chain: chain,
   transport: http(),
   account: account,
 });
 
-const publicClient = createPublicClient({
-  chain: intuitionTestnet,
+export const publicClient = createPublicClient({
+  chain: chain,
   transport: http(),
 });
 
 export const config: any = {
   walletClient,
   publicClient,
-  address: getMultiVaultAddressFromChainId(intuitionTestnet.id),
+  address: getMultiVaultAddressFromChainId(chain.id),
 };
